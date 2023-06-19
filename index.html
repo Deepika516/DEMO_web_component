@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/assets/icons/icomoon/style.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <sourceloop-workflow-element></sourceloop-workflow-element>
+
+    <script type="text/javascript" src="workflows-element.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const element = document.querySelector("sourceloop-workflow-element");
+        console.log({ element });
+        // Add stateChange event listener
+        element.state = {};
+        element.addEventListener("stateChange", (event) => {
+          const newState = event.detail;
+          console.log(newState);
+          // Your stateChange event handling code
+        });
+        element.diagram = "";
+
+        // Add diagramChange event listener
+        element.addEventListener("diagramChange", (event) => {
+          const newDiagram = event.detail;
+          // Your diagramChange event handling code
+        });
+
+        // element.localizedStringMap = {};
+        const localeMap = {};
+        const LocalizedStringKeys = {
+          WhenThisHappens: "when This Happens",
+          DoThis: "doThisLbl",
+          ColumnChanges: "columnChangesLbl",
+          ChangesTo: "triggerColumnSuffix",
+          OnInterval: "onIntervalLbl",
+          OnAddItem: "onAddItemLbl",
+          ItemCreated: "itemCreatedLbl",
+          CheckValue: "checkValueLbl",
+          ChangeValue: "changeValueLbl",
+          SendAnEmail: "sendAnEmailLbl",
+          Else: "elseLbl",
+          TypeSubject: "typeSubjectLbl",
+          TypeEmail: "typeEmailLbl",
+          SelectColumnTooltip: "selectColumnTooltip",
+          SetLbl: "setLbl",
+        };
+
+        localeMap[LocalizedStringKeys.WhenThisHappens] = "When This Happens";
+        localeMap[LocalizedStringKeys.DoThis] = "Do This";
+        localeMap[LocalizedStringKeys.ColumnChanges] = "Column Changes";
+        localeMap[LocalizedStringKeys.OnInterval] = "On Interval";
+        localeMap[LocalizedStringKeys.OnAddItem] = "On Add Item";
+        localeMap[LocalizedStringKeys.ItemCreated] = "Item Created";
+        localeMap[LocalizedStringKeys.CheckValue] = "Check Value";
+        localeMap[LocalizedStringKeys.ChangeValue] = "Change Value";
+        localeMap[LocalizedStringKeys.SendAnEmail] = "Send An Email";
+        localeMap[LocalizedStringKeys.Else] = "else";
+        localeMap[LocalizedStringKeys.TypeSubject] = "Type Subject";
+        localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
+        localeMap[LocalizedStringKeys.SelectColumnTooltip] =
+          "Select Column Tooltip";
+        element.localizedStringMap = localeMap;
+
+        element.allColumns = [
+          {
+            text: "Status",
+            value: "{{Status}}",
+          },
+          {
+            text: "People",
+            value: "{{People}}",
+          },
+          {
+            text: "Text",
+            value: "{{Text}}",
+          },
+          {
+            text: "Numbers",
+            value: "{{Numbers}}",
+          },
+          {
+            text: "Date/Time",
+            value: "{{Date/Time}}",
+          },
+          {
+            text: "Date",
+            value: "{{Date}}",
+          },
+          {
+            text: "Assignee",
+            value: "{{Assignee}}",
+          },
+        ];
+        // Add eventAdded event listener
+        element.addEventListener("eventAdded", (event) => {
+          const newAddedEvent = event.detail;
+          // Your eventAdded event handling code
+        });
+
+        // Add actionAdded event listener
+        element.addEventListener("actionAdded", (event) => {
+          const newAddedAction = event.detail;
+          // Your actionAdded event handling code
+        });
+
+        // Add itemChanged event listener
+        element.addEventListener("itemChanged", (event) => {
+          const newChangedItem = event.detail;
+          // Your itemChanged event handling code
+        });
+      });
+    </script>
+  </body>
+</html>
