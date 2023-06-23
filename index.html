@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <title>Document</title>
+    <!-- <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
+<script src="https://unpkg.com/@webcomponents/shadydom"></script> -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
@@ -24,7 +26,8 @@
         height: 100%;
       }
       body {
-        margin: 0;
+        margin-top: 150px;
+        margin-left:50px;
         font-family: Roboto, "Helvetica Neue", sans-serif;
       }
     </style>
@@ -34,15 +37,16 @@
 
     <script type="text/javascript" src="workflows-element.js"></script>
 
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const element = document.querySelector("sourceloop-workflow-element");
-        console.log({ element });
+        
         // Add stateChange event listener
-        element.state = {};
+        // element.state = {};
         element.addEventListener("stateChange", (event) => {
           const newState = event.detail;
-          console.log(newState);
+          
           // Your stateChange event handling code
         });
         element.diagram = "";
@@ -54,9 +58,9 @@
         });
 
         // element.localizedStringMap = {};
-        const localeMap = {};
+        let localeMap = {};
         const LocalizedStringKeys = {
-          WhenThisHappens: "when This Happens",
+          WhenThisHappens: "whenThisHappensLbl",
           DoThis: "doThisLbl",
           ColumnChanges: "columnChangesLbl",
           ChangesTo: "triggerColumnSuffix",
@@ -87,7 +91,112 @@
         localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
         localeMap[LocalizedStringKeys.SelectColumnTooltip] =
           "Select Column Tooltip";
-        element.localizedStringMap = localeMap;
+       element.localizedStringMap = localeMap;
+      // Object.assign(element['localizedStringMap'],localeMap);
+      console.log(element.localizedStringMap)
+
+// state inputs
+      const NORMALIZED_COLUMN = [
+        {
+          text: 'Status',
+          value: '1952177d-9a3e-6ef4-ae8f-522c08153026',
+        },
+        {
+          text: 'Priority',
+          value: '1952177d-9a3e-6ef4-ae8f-522c08153026',
+        },
+        {
+          text: 'Dropdown',
+          value: '1952177d-9a3e-6ef4-ae8f-522c08153020',
+        },
+        {
+          text: 'People',
+          value: 'a7135732-096c-9b41-2696-90a195d3c383',
+        },
+        {
+          text: 'Text',
+          value: '2069d144-db46-0737-2c9d-bc339949d684',
+        },
+        {
+          text: 'Numbers',
+          value: '47beeecd-712c-6f8b-c595-92c3712780cb',
+        },
+        {
+          text: 'Date/Time',
+          value: '6f1e6eee-5a04-6a2e-173f-a354f569f1e5',
+        },
+        {
+          text: 'Date',
+          value: '5b79f82b-0e7b-8e74-5e71-909a473e5c07',
+        },
+        {
+          text: 'Assignee',
+          value: 'd1e36f1e-8539-91ab-cabf-37799009fb52',
+        },
+      ];
+
+      const DEFAULT_CONDITION = [
+        {text: 'Equal', value: 'equal'},
+        {text: 'Not Equal', value: 'notequal'},
+        {text: 'Changes', value: 'changes'},
+      ];
+
+      const DATE_CONDITIONS = [
+        {text: 'Past Today', value: 'pastToday'},
+        {text: 'Coming In', value: 'comingIn'},
+        {text: 'Past by', value: 'pastby'},
+        {text: 'Changes', value: 'changes'},
+      ];
+
+      const CONDITIONS = {
+        date: DATE_CONDITIONS,
+        datetime: DATE_CONDITIONS,
+      };
+
+      const FIELD_VALUES = {
+      status: {
+          valueInputType: 'list',
+          values: [
+            {text: 'Todo', value: 'todo'},
+            {text: 'In Progress', value: 'in_progress'},
+          ],
+        },
+      priority: {
+        valueInputType: 'list',
+        values: [
+          {text: 'Critical', value: 'critical'},
+          {text: 'High', value: 'high'},
+          {text: 'Medium', value: 'medium'},
+          {text: 'Low', value: 'low'},
+        ],
+      },
+      date: {
+        valueInputType: 'date',
+      },
+      datetime: {
+        valueInputType: 'datetime',
+      },
+      people: {
+        valueInputType: 'people',
+      },
+      text: {
+        valueInputType: 'text',
+      },
+      number: {
+        valueInputType: 'number',
+      },
+    }
+    element.state = {
+    columns: NORMALIZED_COLUMN,
+    conditions:[],
+    values:[],
+  }
+
+   element.addEventListener('eventAdded', e => {
+    debugger
+        console.log(event.detail); 
+        elementClick(e.detail)// Not working
+      });
 
         element.allColumns = [
           {
@@ -119,15 +228,130 @@
             value: "{{Assignee}}",
           },
         ];
-        // Add eventAdded event listener
-        element.addEventListener("eventAdded", (event) => {
-          const newAddedEvent = event.detail;
-          // Your eventAdded event handling code
-        });
+        // Add eventAdded event listener 
 
-        // Add actionAdded event listener
-        element.addEventListener("actionAdded", (event) => {
-          const newAddedAction = event.detail;
+       function elementClick(event){
+
+        debugger;
+          const selectedElement = event.event ?? event.action;
+          console.log(event);
+          let columns = NORMALIZED_COLUMN;
+          console.log(columns);
+          switch (selectedElement.getIdentifier()) {
+            case "OnChangeEvent":
+            case "OnValueEvent":
+              selectedElement.state.change('columns', columns);
+            break;
+         }
+  }
+
+       function valueChanges(event) {
+    let selectedCol;
+    event.item.state.change('boardId', this.data.boardId);
+    switch (event.field) {
+      case "ValueInput":
+        const _timescale = TIMESCALE;
+        if (
+          this.environment.workflowLowerIntervalScale === TimeScaleEnum.Hours
+        ) {
+          _timescale.push({
+            text: 'Hours',
+            value: 'H',
+            timescale: 'T',
+          });
+        }
+        if (event.item.getIdentifier() === 'OnIntervalEvent') {
+          event.item.state.change('intervalList', _timescale);
+          return;
+        }
+        break;
+      case "IntervalInput":
+        const timescale = TIMESCALE.find(
+          time => time.value === event.value,
+        )?.timescale;
+        event.item.state.change('timescale', timescale);
+        break;
+      case "ColumnInput":
+        selectedCol = NORMALIZED_COLUMN.find(col => col.value === event.value);
+        this.selectedColumnType =
+          selectedCol.text?.toLowerCase()
+        const condition =
+          CONDITIONS[selectedCol.text?.toLowerCase()] || DEFAULT_CONDITION;
+        if (selectedCol) {
+          event.item.state.change('conditions', condition);
+        }
+        break;
+      case "ConditionInput":
+      case ToColumnInput.identifier:
+        selectedCol = NORMALIZED_COLUMN.find(col => col.value === event.value);
+        if(selectedCol)
+        this.selectedColumnType =
+        selectedCol.text?.toLowerCase()
+        event.item.state.change(
+          'valueInputType',
+          FIELD_VALUES[this.selectedColumnType].valueInputType,
+        );
+        if (FIELD_VALUES[this.selectedColumnType].values) {
+          event.item.state.change(
+            'values',
+            FIELD_VALUES[this.selectedColumnType].values,
+          );
+        }
+
+        break;
+      case "EmailDataInput":
+        const notify = [
+          {
+            text: WORKFLOW_CONST.notifyMeLBl,
+            value: NotificationRecipientTypesEnum.NotifyMe,
+          },
+          {
+            text: WORKFLOW_CONST.notifyEveryoneOnTheProjectLbl,
+            value: NotificationRecipientTypesEnum.NotifyEveryoneOnProject,
+          },
+          {
+            text: WORKFLOW_CONST.notifyProjectOwnersLbl,
+            value: NotificationRecipientTypesEnum.NotifyProjectOwners,
+          },
+          {
+            text: WORKFLOW_CONST.notifySpecificPeopleLbl,
+            value: NotificationRecipientTypesEnum.NotifySpecificPeople,
+          },
+          {
+            text: WORKFLOW_CONST.notifySpecificColumn,
+            value: NotificationRecipientTypesEnum.NotifySpecificColumn,
+          },
+        ];
+        event.item.state.change('emailToInputType', InputTypes.List);
+        event.item.state.change('emailToValues', notify);
+        if (event.value) {
+          event.item.state.change('subject', event.value.subject);
+          event.item.state.change('body', event.value.body);
+        }
+        break;
+      case "EmailToInput": {
+        // this.performSelectNotifRecipient(event);
+        event.item.state.change('recipientType', event.value);
+        break;
+      }
+      case "EmailRecepientInput":
+        if (
+          event.item.state.get('emailTo') !==
+          NotificationRecipientTypesEnum.NotifySpecificColumn
+        ) {
+          event.item.state.change('recipients', event.value?.ids);
+        } else {
+          event.item.state.change('peopleColumnId', event.value);
+        }
+        break;
+    }
+  }
+
+  // Add actionAdded event listener
+        element.addEventListener("actionAdded", e => {
+          debugger;
+          console.log(event.detail);
+          valueChanges(event);
           // Your actionAdded event handling code
         });
 
