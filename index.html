@@ -27,7 +27,7 @@
       }
       body {
         margin-top: 150px;
-        margin-left:50px;
+        margin-left: 50px;
         font-family: Roboto, "Helvetica Neue", sans-serif;
       }
     </style>
@@ -37,329 +37,511 @@
 
     <script type="text/javascript" src="workflows-element.js"></script>
 
-
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const element = document.querySelector("sourceloop-workflow-element");
-        
-        // Add stateChange event listener
-        // element.state = {};
-        element.addEventListener("stateChange", (event) => {
-          const newState = event.detail;
-          
-          // Your stateChange event handling code
-        });
-        element.diagram = "";
 
-        // Add diagramChange event listener
-        element.addEventListener("diagramChange", (event) => {
-          const newDiagram = event.detail;
-          // Your diagramChange event handling code
-        });
-
-        // element.localizedStringMap = {};
-        let localeMap = {};
-        const LocalizedStringKeys = {
-          WhenThisHappens: "whenThisHappensLbl",
-          DoThis: "doThisLbl",
-          ColumnChanges: "columnChangesLbl",
-          ChangesTo: "triggerColumnSuffix",
-          OnInterval: "onIntervalLbl",
-          OnAddItem: "onAddItemLbl",
-          ItemCreated: "itemCreatedLbl",
-          CheckValue: "checkValueLbl",
-          ChangeValue: "changeValueLbl",
-          SendAnEmail: "sendAnEmailLbl",
-          Else: "elseLbl",
-          TypeSubject: "typeSubjectLbl",
-          TypeEmail: "typeEmailLbl",
-          SelectColumnTooltip: "selectColumnTooltip",
-          SetLbl: "setLbl",
-        };
-
-        localeMap[LocalizedStringKeys.WhenThisHappens] = "When This Happens";
-        localeMap[LocalizedStringKeys.DoThis] = "Do This";
-        localeMap[LocalizedStringKeys.ColumnChanges] = "Column Changes";
-        localeMap[LocalizedStringKeys.OnInterval] = "On Interval";
-        localeMap[LocalizedStringKeys.OnAddItem] = "On Add Item";
-        localeMap[LocalizedStringKeys.ItemCreated] = "Item Created";
-        localeMap[LocalizedStringKeys.CheckValue] = "Check Value";
-        localeMap[LocalizedStringKeys.ChangeValue] = "Change Value";
-        localeMap[LocalizedStringKeys.SendAnEmail] = "Send An Email";
-        localeMap[LocalizedStringKeys.Else] = "else";
-        localeMap[LocalizedStringKeys.TypeSubject] = "Type Subject";
-        localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
-        localeMap[LocalizedStringKeys.SelectColumnTooltip] =
-          "Select Column Tooltip";
-       element.localizedStringMap = localeMap;
-      // Object.assign(element['localizedStringMap'],localeMap);
-      console.log(element.localizedStringMap)
-
-// state inputs
-      const NORMALIZED_COLUMN = [
-        {
-          text: 'Status',
-          value: '1952177d-9a3e-6ef4-ae8f-522c08153026',
-        },
-        {
-          text: 'Priority',
-          value: '1952177d-9a3e-6ef4-ae8f-522c08153026',
-        },
-        {
-          text: 'Dropdown',
-          value: '1952177d-9a3e-6ef4-ae8f-522c08153020',
-        },
-        {
-          text: 'People',
-          value: 'a7135732-096c-9b41-2696-90a195d3c383',
-        },
-        {
-          text: 'Text',
-          value: '2069d144-db46-0737-2c9d-bc339949d684',
-        },
-        {
-          text: 'Numbers',
-          value: '47beeecd-712c-6f8b-c595-92c3712780cb',
-        },
-        {
-          text: 'Date/Time',
-          value: '6f1e6eee-5a04-6a2e-173f-a354f569f1e5',
-        },
-        {
-          text: 'Date',
-          value: '5b79f82b-0e7b-8e74-5e71-909a473e5c07',
-        },
-        {
-          text: 'Assignee',
-          value: 'd1e36f1e-8539-91ab-cabf-37799009fb52',
-        },
-      ];
-
-      const DEFAULT_CONDITION = [
-        {text: 'Equal', value: 'equal'},
-        {text: 'Not Equal', value: 'notequal'},
-        {text: 'Changes', value: 'changes'},
-      ];
-
-      const DATE_CONDITIONS = [
-        {text: 'Past Today', value: 'pastToday'},
-        {text: 'Coming In', value: 'comingIn'},
-        {text: 'Past by', value: 'pastby'},
-        {text: 'Changes', value: 'changes'},
-      ];
-
-      const CONDITIONS = {
-        date: DATE_CONDITIONS,
-        datetime: DATE_CONDITIONS,
-      };
-
-      const FIELD_VALUES = {
-      status: {
-          valueInputType: 'list',
-          values: [
-            {text: 'Todo', value: 'todo'},
-            {text: 'In Progress', value: 'in_progress'},
-          ],
-        },
-      priority: {
-        valueInputType: 'list',
-        values: [
-          {text: 'Critical', value: 'critical'},
-          {text: 'High', value: 'high'},
-          {text: 'Medium', value: 'medium'},
-          {text: 'Low', value: 'low'},
-        ],
-      },
-      date: {
-        valueInputType: 'date',
-      },
-      datetime: {
-        valueInputType: 'datetime',
-      },
-      people: {
-        valueInputType: 'people',
-      },
-      text: {
-        valueInputType: 'text',
-      },
-      number: {
-        valueInputType: 'number',
-      },
-    }
-    element.state = {
-    columns: NORMALIZED_COLUMN,
-    conditions:[],
-    values:[],
-  }
-
-   element.addEventListener('eventAdded', e => {
-    debugger
-        console.log(event.detail); 
-        elementClick(e.detail)// Not working
-      });
-
-        element.allColumns = [
+        const NORMALIZED_COLUMN = [
           {
             text: "Status",
-            value: "{{Status}}",
+            value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
+          },
+          {
+            text: "Priority",
+            value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
+          },
+          {
+            text: "Dropdown",
+            value: "1952177d-9a3e-6ef4-ae8f-522c08153020",
           },
           {
             text: "People",
-            value: "{{People}}",
+            value: "a7135732-096c-9b41-2696-90a195d3c383",
           },
           {
             text: "Text",
-            value: "{{Text}}",
+            value: "2069d144-db46-0737-2c9d-bc339949d684",
           },
           {
             text: "Numbers",
-            value: "{{Numbers}}",
+            value: "47beeecd-712c-6f8b-c595-92c3712780cb",
           },
           {
             text: "Date/Time",
-            value: "{{Date/Time}}",
+            value: "6f1e6eee-5a04-6a2e-173f-a354f569f1e5",
           },
           {
             text: "Date",
-            value: "{{Date}}",
+            value: "5b79f82b-0e7b-8e74-5e71-909a473e5c07",
           },
           {
             text: "Assignee",
-            value: "{{Assignee}}",
+            value: "d1e36f1e-8539-91ab-cabf-37799009fb52",
           },
         ];
-        // Add eventAdded event listener 
 
-       function elementClick(event){
+        const TIMESCALE = [
+          { text: "Days", value: "D", timescale: "" },
+          { text: "Hours", value: "H", timescale: "T" },
+          { text: "Seconds", value: "S", timescale: "T" },
+        ];
 
-        debugger;
+        const VALUE_TYPES = [
+          {
+            text: "ANYTHING",
+            value: "anyValue",
+          },
+          {
+            text: "CUSTOM_VALUE",
+            value: "customValue",
+          },
+        ];
+
+        const FIELD_VALUES = {
+          status: {
+            valueInputType: "list",
+            values: [
+              { text: "Todo", value: "todo" },
+              { text: "In Progress", value: "in_progress" },
+            ],
+          },
+          priority: {
+            valueInputType: "list",
+            values: [
+              { text: "Critical", value: "critical" },
+              { text: "High", value: "high" },
+              { text: "Medium", value: "medium" },
+              { text: "Low", value: "low" },
+            ],
+          },
+          date: {
+            valueInputType: "date",
+          },
+          datetime: {
+            valueInputType: "datetime",
+          },
+          people: {
+            valueInputType: "people",
+          },
+          text: {
+            valueInputType: "text",
+          },
+          number: {
+            valueInputType: "number",
+          },
+        };
+
+        const DEFAULT_CONDITION = [
+          { text: "Equal", value: "equal" },
+          { text: "Not Equal", value: "notequal" },
+          { text: "Changes", value: "changes" },
+        ];
+        const DATE_CONDITIONS = [
+          { text: "Past Today", value: "pastToday" },
+          { text: "Coming In", value: "comingIn" },
+          { text: "Past by", value: "pastby" },
+          { text: "Changes", value: "changes" },
+        ];
+        const CONDITIONS = {
+          date: DATE_CONDITIONS,
+          datetime: DATE_CONDITIONS,
+        };
+
+        let selectedCol;
+        let selectedColumnType;
+        const gatewayType = new Map();
+        prepareGatewayTypeForAvailableConditions();
+        let gatewayTypeCol = [];
+        let diagram = "";
+
+        element.addEventListener("diagramChange", (event) => {
+          diagram = event.detail;
+          // console.log(diagram);
+        });
+        element.addEventListener("eventAdded", (event) => {
+          elementClick(event.detail);
+        });
+        element.addEventListener("actionAdded", (event) => {
+          elementClick(event.detail);
+        });
+        element.addEventListener("itemChanged", (event) => {
+          valueChanges(event.detail);
+        });
+
+        function elementClick(event) {
           const selectedElement = event.event ?? event.action;
-          console.log(event);
-          let columns = NORMALIZED_COLUMN;
-          console.log(columns);
           switch (selectedElement.getIdentifier()) {
+            case "OnIntervalEvent":
+              selectedElement.state.change("intervalList", TIMESCALE);
+              selectedElement.state.change("valuePlaceholder", "n");
             case "OnChangeEvent":
             case "OnValueEvent":
-              selectedElement.state.change('columns', columns);
-            break;
-         }
-  }
+            case "ChangeColumnValueAction":
+              selectedElement.state.change("columns", NORMALIZED_COLUMN);
+              break;
+          }
+        }
 
-       function valueChanges(event) {
-    let selectedCol;
-    event.item.state.change('boardId', this.data.boardId);
-    switch (event.field) {
-      case "ValueInput":
-        const _timescale = TIMESCALE;
-        if (
-          this.environment.workflowLowerIntervalScale === TimeScaleEnum.Hours
-        ) {
-          _timescale.push({
-            text: 'Hours',
-            value: 'H',
-            timescale: 'T',
-          });
+        // function valueChanges(event) {
+        //
+
+        function valueChanges(event) {
+          let selectedCol;
+          // event.item.state.change('boardId', data.boardId);
+          switch (event.field) {
+            case "ValueInput":
+              //const _timescale = TIMESCALE;
+              // if (
+              //   environment.workflowLowerIntervalScale === TimeScaleEnum.Hours
+              // )
+              // {
+              //   _timescale.push({
+              //     text: 'Hours',
+              //     value: 'H',
+              //     timescale: 'T',
+              //   });
+              // }
+              if (event.item.getIdentifier() === "OnIntervalEvent") {
+                event.item.state.change("intervalList", TIMESCALE);
+                return;
+              }
+              break;
+            case "IntervalInput":
+              const timescale = TIMESCALE.find(
+                (time) => time.value === event.value
+              )?.timescale;
+              event.item.state.change("timescale", timescale);
+              break;
+              case 'TriggerColumnInput':
+
+            case "ColumnInput":
+              selectedCol = NORMALIZED_COLUMN.find(
+                (col) => col.value === event.value
+              );
+              selectedColumnType = selectedCol.text?.toLowerCase();
+              const condition =
+                CONDITIONS[selectedCol.text?.toLowerCase()] ||
+                DEFAULT_CONDITION;
+              if (selectedCol) {
+                event.item.state.change("conditions", condition);
+              }
+            case "ConditionInput":
+            case "ToColumnInput":
+              selectedCol = NORMALIZED_COLUMN.find(
+                (col) => col.value === event.value
+              );
+              if (selectedCol)
+                selectedColumnType = selectedCol.text?.toLowerCase();
+              event.item.state.change(
+                "valueInputType",
+                FIELD_VALUES[selectedColumnType].valueInputType
+              );
+              if (FIELD_VALUES[selectedColumnType].values) {
+                event.item.state.change(
+                  "values",
+                  FIELD_VALUES[selectedColumnType].values
+                );
+              }
+
+              break;
+            case "EmailDataInput":
+              const notify = [
+                {
+                  text: WORKFLOW_CONST.notifyMeLBl,
+                  value: NotificationRecipientTypesEnum.NotifyMe,
+                },
+                {
+                  text: WORKFLOW_CONST.notifyEveryoneOnTheProjectLbl,
+                  value: NotificationRecipientTypesEnum.NotifyEveryoneOnProject,
+                },
+                {
+                  text: WORKFLOW_CONST.notifyProjectOwnersLbl,
+                  value: NotificationRecipientTypesEnum.NotifyProjectOwners,
+                },
+                {
+                  text: WORKFLOW_CONST.notifySpecificPeopleLbl,
+                  value: NotificationRecipientTypesEnum.NotifySpecificPeople,
+                },
+                {
+                  text: WORKFLOW_CONST.notifySpecificColumn,
+                  value: NotificationRecipientTypesEnum.NotifySpecificColumn,
+                },
+              ];
+              event.item.state.change("emailToInputType", InputTypes.List);
+              event.item.state.change("emailToValues", notify);
+              if (event.value) {
+                event.item.state.change("subject", event.value.subject);
+                event.item.state.change("body", event.value.body);
+              }
+              break;
+            case "EmailToInput": {
+              // performSelectNotifRecipient(event);
+              event.item.state.change("recipientType", event.value);
+              break;
+            }
+            case "EmailRecepientInput":
+              if (
+                event.item.state.get("emailTo") !==
+                NotificationRecipientTypesEnum.NotifySpecificColumn
+              ) {
+                event.item.state.change("recipients", event.value?.ids);
+              } else {
+                event.item.state.change("peopleColumnId", event.value);
+              }
+              break;
+          }
         }
-        if (event.item.getIdentifier() === 'OnIntervalEvent') {
-          event.item.state.change('intervalList', _timescale);
-          return;
+
+        function prepareGatewayTypeCollection(event) {
+          if (gatewayType.get("equal").includes(selectedColumnType)) {
+            gatewayTypeCol.push({
+              text: "Equal",
+              value: "equal",
+            });
+
+            gatewayTypeCol.push({
+              text: "Not Equal",
+              value: "notequal",
+            });
+          }
+
+          if (gatewayType.get("greaterThan").includes(selectedColumnType)) {
+            gatewayTypeCol.push({
+              text: "Greater Than",
+              value: "greaterThan",
+            });
+
+            gatewayTypeCol.push({
+              text: "Less than",
+              value: "lessThan",
+            });
+          }
+
+          if (gatewayType.get("dueindays").includes(selectedColumnType)) {
+            gatewayTypeCol.push({
+              text: "Past Today",
+              value: "pasttoday",
+            });
+
+            gatewayTypeCol.push({
+              text: "Coming In {num} daya",
+              value: "comingin",
+            });
+
+            gatewayTypeCol.push({
+              text: "Past By",
+              value: "pastby",
+            });
+          }
+
+          if (gatewayType.get("like").includes(selectedColumnType)) {
+            gatewayTypeCol.push({
+              text: "like",
+              value: "like",
+            });
+          }
         }
-        break;
-      case "IntervalInput":
-        const timescale = TIMESCALE.find(
-          time => time.value === event.value,
-        )?.timescale;
-        event.item.state.change('timescale', timescale);
-        break;
-      case "ColumnInput":
-        selectedCol = NORMALIZED_COLUMN.find(col => col.value === event.value);
-        this.selectedColumnType =
-          selectedCol.text?.toLowerCase()
-        const condition =
-          CONDITIONS[selectedCol.text?.toLowerCase()] || DEFAULT_CONDITION;
-        if (selectedCol) {
-          event.item.state.change('conditions', condition);
+        // function prepareGatewayTypeCollection() {
+        //   if (
+        //     gatewayType.get("equal").includes(selectedColumnType)
+        //   ) {
+        //     gatewayTypeCol.push({
+        //       text: "Equal",
+        //       value: "equal",
+        //     });
+
+        //     gatewayTypeCol.push({
+        //       text: "NotEqual",
+        //       value: "notequal",
+        //     });
+        //   }
+        // }
+
+        // if (
+        //   gatewayType
+        //     .get(GatewayTypeEnum.GreaterThan)
+        //     .includes(selectedColumnType)
+        // ) {
+        //   gatewayTypeCol.push({
+        //     text: localisedStrings.greaterThanLbl,
+        //     value: GatewayTypeEnum.GreaterThan,
+        //   });
+
+        //   gatewayTypeCol.push({
+        //     text: localisedStrings.lessThanLbl,
+        //     // value: GatewayTypeEnum.LessThan,
+        //   });
+        // }
+
+        function setColumnType(event, selectedCol) {
+          event.item.state.remove("valuePlaceholder");
+          if (event.field === "ToColumnInput") {
+            selectedCol = NORMALIZED_COLUMN.find(
+              (col) => col.value === event.value
+            );
+            selectedColumnType = selectedCol.text.toLowerCase();
+            gatewayTypeCol = [];
+          }
+          if (
+            ["comingin", "pastby"].includes(event.value) &&
+            ["date", "datetime"].includes(selectedColumnType)
+          ) {
+            event.item.state.change("valuePlaceholder", "n");
+            event.item.state.change("valueInputType", "number");
+            return;
+          }
+
+          switch (selectedColumnType) {
+            case "datetime":
+            case "date":
+              if (
+                event.item.name.toLowerCase() ===
+                localisedStrings.changeColumnValueLbl.toLowerCase()
+              ) {
+                event.item.state.change("valueInputType", selectedColumnType);
+                break;
+              }
+            // eslint-disable-next-line no-fallthrough
+            case "status":
+            case "priority":
+            case "dropdown":
+              setDropdownType(event, selectedCol);
+              break;
+            // case "people":
+            //   prepareBoardMemberCollection();
+            //   event.item.state.change("valueInputType", "people");
+            // //  event.item.state.change("values", userCol);
+            //   setNonDropdownTypeColumnValues(event);
+            //   break;
+            case "number":
+            case "percentage":
+            // case 'currency':
+            //   setNonDropdownTypeColumnValues(event);
+            //   event.item.state.change("valueInputType", 'number');
+            //   break;
+            case "text":
+              if (!event.item.trigger) {
+                event.item.state.change("valueTypes", VALUE_TYPES);
+              }
+              event.item.state.change("valueInputType", "text");
+              break;
+          }
         }
-        break;
-      case "ConditionInput":
-      case ToColumnInput.identifier:
-        selectedCol = NORMALIZED_COLUMN.find(col => col.value === event.value);
-        if(selectedCol)
-        this.selectedColumnType =
-        selectedCol.text?.toLowerCase()
-        event.item.state.change(
-          'valueInputType',
-          FIELD_VALUES[this.selectedColumnType].valueInputType,
-        );
-        if (FIELD_VALUES[this.selectedColumnType].values) {
-          event.item.state.change(
-            'values',
-            FIELD_VALUES[this.selectedColumnType].values,
+
+        function setDropdownType(event, selectedCol) {
+          if (!selectedCol) {
+            selectedCol = NORMALIZED_COLUMN.find(
+              (col) => col.value === event.item.state.get("column")
+            );
+          }
+          prepareDropdownTypeColumnValueCollection(
+            selectedCol,
+            true,
+            event.item.trigger
           );
+          event.item.state.change("valueInputType", "list");
+          event.item.state.change("values", [
+            { text: "hie", value: "hie tiny" },
+          ]);
+          if ("equal" || "notequal") {
+            event.item.state.change("conditionPrefix", "to");
+          }
         }
 
-        break;
-      case "EmailDataInput":
-        const notify = [
-          {
-            text: WORKFLOW_CONST.notifyMeLBl,
-            value: NotificationRecipientTypesEnum.NotifyMe,
-          },
-          {
-            text: WORKFLOW_CONST.notifyEveryoneOnTheProjectLbl,
-            value: NotificationRecipientTypesEnum.NotifyEveryoneOnProject,
-          },
-          {
-            text: WORKFLOW_CONST.notifyProjectOwnersLbl,
-            value: NotificationRecipientTypesEnum.NotifyProjectOwners,
-          },
-          {
-            text: WORKFLOW_CONST.notifySpecificPeopleLbl,
-            value: NotificationRecipientTypesEnum.NotifySpecificPeople,
-          },
-          {
-            text: WORKFLOW_CONST.notifySpecificColumn,
-            value: NotificationRecipientTypesEnum.NotifySpecificColumn,
-          },
-        ];
-        event.item.state.change('emailToInputType', InputTypes.List);
-        event.item.state.change('emailToValues', notify);
-        if (event.value) {
-          event.item.state.change('subject', event.value.subject);
-          event.item.state.change('body', event.value.body);
-        }
-        break;
-      case "EmailToInput": {
-        // this.performSelectNotifRecipient(event);
-        event.item.state.change('recipientType', event.value);
-        break;
-      }
-      case "EmailRecepientInput":
-        if (
-          event.item.state.get('emailTo') !==
-          NotificationRecipientTypesEnum.NotifySpecificColumn
+        function prepareDropdownTypeColumnValueCollection(
+          column,
+          addBlank = false,
+          addAnything = false
         ) {
-          event.item.state.change('recipients', event.value?.ids);
-        } else {
-          event.item.state.change('peopleColumnId', event.value);
+          let possibleValues;
+          columnValueCol = [];
+          // if (column.columnType === ColumnTypesEnum.people) {
+          //   prepareBoardMemberCollection();
+          // } else
+          if (
+            column.text.toLowerCase() === "date" ||
+            column.text.toLowerCase() === "datetime"
+          ) {
+            columnValueCol.push(
+              ...[
+                {
+                  text: "todaylbl",
+                  value: "today",
+                },
+                {
+                  text: "pastDateLbl",
+                  value: "pasttoday",
+                },
+              ]
+            );
+          } else {
+            switch (column.columnType) {
+              case "status":
+                possibleValues = column?.metaData?.availableStatus;
+                break;
+              case "priority":
+                possibleValues = column?.metaData?.availablePriorities;
+                break;
+              case "dropdown":
+                possibleValues = column?.metaData?.options;
+                break;
+              default:
+                possibleValues = [];
+            }
+
+            possibleValues?.forEach((status) => {
+              const obj = {
+                text: `"${status.displayValue}"`,
+                value: status.value,
+                color: status.color,
+                iconClass: status.iconClass,
+                bgColor: status.bgColor,
+              };
+              columnValueCol.push(obj);
+            });
+
+            if (addBlank) {
+              addBlankOptionInDropdown(column);
+            }
+          }
+          if (addAnything) {
+            columnValueCol.unshift({
+              text: ANYTHING_DISPLAY_VALUE,
+              value: ANYTHING_VALUE,
+            });
+          }
         }
-        break;
-    }
-  }
 
-  // Add actionAdded event listener
-        element.addEventListener("actionAdded", e => {
-          debugger;
-          console.log(event.detail);
-          valueChanges(event);
-          // Your actionAdded event handling code
-        });
+        function prepareGatewayTypeForAvailableConditions() {
+          gatewayType.set("equal", [
+            "status",
+            "dropdown",
+            "priority",
+            "number",
+            "percentage",
+            "currency",
+            "text",
+            "people",
+          ]);
 
-        // Add itemChanged event listener
-        element.addEventListener("itemChanged", (event) => {
-          const newChangedItem = event.detail;
-          // Your itemChanged event handling code
-        });
+          gatewayType.set("greaterThan", ["number", "percentage", "currency"]);
+
+          gatewayType.set("dueindays", ["date", "datetime"]);
+
+          gatewayType.set("like", ["text"]);
+          gatewayType.set("changes", [
+            "status",
+            "dropdown",
+            "priority",
+            "number",
+            "percentage",
+            "currency",
+            "text",
+            "people",
+            "date",
+            "datetime",
+          ]);
+        }
       });
     </script>
   </body>
