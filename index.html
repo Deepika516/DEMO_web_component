@@ -26,9 +26,15 @@
         height: 100%;
       }
       body {
-        margin-top: 150px;
-        margin-left: 50px;
+        /* margin-top: 150px;
+        margin-left: 50px; */
         font-family: Roboto, "Helvetica Neue", sans-serif;
+      }
+      .tree-group.no-node{
+        margin-bottom: 0!important;
+      }
+      .tree-group .last-node{
+        height: auto!important;
       }
     </style>
   </head>
@@ -187,20 +193,10 @@
 
         function valueChanges(event) {
           let selectedCol;
-          // event.item.state.change('boardId', data.boardId);
+          
           switch (event.field) {
             case "ValueInput":
-              //const _timescale = TIMESCALE;
-              // if (
-              //   environment.workflowLowerIntervalScale === TimeScaleEnum.Hours
-              // )
-              // {
-              //   _timescale.push({
-              //     text: 'Hours',
-              //     value: 'H',
-              //     timescale: 'T',
-              //   });
-              // }
+            
               if (event.item.getIdentifier() === "OnIntervalEvent") {
                 event.item.state.change("intervalList", TIMESCALE);
                 return;
@@ -341,37 +337,7 @@
             });
           }
         }
-        // function prepareGatewayTypeCollection() {
-        //   if (
-        //     gatewayType.get("equal").includes(selectedColumnType)
-        //   ) {
-        //     gatewayTypeCol.push({
-        //       text: "Equal",
-        //       value: "equal",
-        //     });
-
-        //     gatewayTypeCol.push({
-        //       text: "NotEqual",
-        //       value: "notequal",
-        //     });
-        //   }
-        // }
-
-        // if (
-        //   gatewayType
-        //     .get(GatewayTypeEnum.GreaterThan)
-        //     .includes(selectedColumnType)
-        // ) {
-        //   gatewayTypeCol.push({
-        //     text: localisedStrings.greaterThanLbl,
-        //     value: GatewayTypeEnum.GreaterThan,
-        //   });
-
-        //   gatewayTypeCol.push({
-        //     text: localisedStrings.lessThanLbl,
-        //     // value: GatewayTypeEnum.LessThan,
-        //   });
-        // }
+        
 
         function setColumnType(event, selectedCol) {
           event.item.state.remove("valuePlaceholder");
@@ -407,18 +373,9 @@
             case "dropdown":
               setDropdownType(event, selectedCol);
               break;
-            // case "people":
-            //   prepareBoardMemberCollection();
-            //   event.item.state.change("valueInputType", "people");
-            // //  event.item.state.change("values", userCol);
-            //   setNonDropdownTypeColumnValues(event);
-            //   break;
             case "number":
             case "percentage":
-            // case 'currency':
-            //   setNonDropdownTypeColumnValues(event);
-            //   event.item.state.change("valueInputType", 'number');
-            //   break;
+           
             case "text":
               if (!event.item.trigger) {
                 event.item.state.change("valueTypes", VALUE_TYPES);
