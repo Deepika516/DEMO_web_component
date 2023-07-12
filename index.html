@@ -30,16 +30,21 @@
         margin-left: 50px; */
         font-family: Roboto, "Helvetica Neue", sans-serif;
       }
-      .tree-group.no-node{
-        margin-bottom: 0!important;
+      .tree-group.no-node {
+        margin-bottom: 0 !important;
       }
-      .tree-group .last-node{
-        height: auto!important;
+      .tree-group .last-node {
+        height: auto !important;
       }
     </style>
   </head>
   <body>
     <sourceloop-workflow-element></sourceloop-workflow-element>
+    <div class="diagramRender">
+      <p id="diagram">
+
+      </p>
+    </div>
 
     <script type="text/javascript" src="workflows-element.js"></script>
 
@@ -57,32 +62,12 @@
             value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
           },
           {
-            text: "Dropdown",
-            value: "1952177d-9a3e-6ef4-ae8f-522c08153020",
-          },
-          {
-            text: "People",
-            value: "a7135732-096c-9b41-2696-90a195d3c383",
-          },
-          {
             text: "Text",
             value: "2069d144-db46-0737-2c9d-bc339949d684",
           },
           {
-            text: "Numbers",
+            text: "Number",
             value: "47beeecd-712c-6f8b-c595-92c3712780cb",
-          },
-          {
-            text: "Date/Time",
-            value: "6f1e6eee-5a04-6a2e-173f-a354f569f1e5",
-          },
-          {
-            text: "Date",
-            value: "5b79f82b-0e7b-8e74-5e71-909a473e5c07",
-          },
-          {
-            text: "Assignee",
-            value: "d1e36f1e-8539-91ab-cabf-37799009fb52",
           },
         ];
 
@@ -140,13 +125,13 @@
         const DEFAULT_CONDITION = [
           { text: "Equal", value: "equal" },
           { text: "Not Equal", value: "notequal" },
-          { text: "Changes", value: "changes" },
+         
         ];
         const DATE_CONDITIONS = [
           { text: "Past Today", value: "pastToday" },
           { text: "Coming In", value: "comingIn" },
           { text: "Past by", value: "pastby" },
-          { text: "Changes", value: "changes" },
+         
         ];
         const CONDITIONS = {
           date: DATE_CONDITIONS,
@@ -156,13 +141,16 @@
         let selectedCol;
         let selectedColumnType;
         const gatewayType = new Map();
-        prepareGatewayTypeForAvailableConditions();
+       // prepareGatewayTypeForAvailableConditions();
         let gatewayTypeCol = [];
         let diagram = "";
 
         element.addEventListener("diagramChange", (event) => {
           diagram = event.detail;
-          // console.log(diagram);
+          const element=document.getElementById("diagram");
+          if(diagram){
+            element.innerText=diagram;
+          }
         });
         element.addEventListener("eventAdded", (event) => {
           elementClick(event.detail);
@@ -177,40 +165,114 @@
         function elementClick(event) {
           const selectedElement = event.event ?? event.action;
           switch (selectedElement.getIdentifier()) {
-            case "OnIntervalEvent":
+            case window.OnIntervalEvent.identifier:
               selectedElement.state.change("intervalList", TIMESCALE);
               selectedElement.state.change("valuePlaceholder", "n");
-            case "OnChangeEvent":
-            case "OnValueEvent":
-            case "ChangeColumnValueAction":
+            case window.OnChangeEvent.identifier:
+            case window.OnValueEvent.identifier:
+             let columns = NORMALIZED_COLUMN.filter(
+                (col) => col.text.toLowerCase() !== 'priority'
+              );
+              selectedElement.state.change("columns", columns);
+              break;
+            case window.ChangeColumnValueAction.identifier:
               selectedElement.state.change("columns", NORMALIZED_COLUMN);
               break;
           }
         }
+    element.state={
+    columns: NORMALIZED_COLUMN,
+    conditions: [],
+    values: [],
+  };
 
-        // function valueChanges(event) {
-        //
+  element.allColumns = [
+    {
+      text: 'Status',
+      value: '{{Status}}',
+    },
+    {
+      text: 'People',
+      value: '{{People}}',
+    },
+    {
+      text: 'Text',
+      value: '{{Text}}',
+    },
+    {
+      text: 'Number',
+      value: '{{Number}}',
+    },
+    {
+      text: 'Date/Time',
+      value: '{{Date/Time}}',
+    },
+    {
+      text: 'Date',
+      value: '{{Date}}',
+    },
+    {
+      text: 'Assignee',
+      value: '{{Assignee}}',
+    },
+  ];
+
+  let localeMap = {};
+        const LocalizedStringKeys = {
+          WhenThisHappens: "whenThisHappensLbl",
+          DoThis: "doThisLbl",
+          ColumnChanges: "columnChangesLbl",
+          ChangesTo: "triggerColumnSuffix",
+          OnInterval: "onIntervalLbl",
+          OnAddItem: "onAddItemLbl",
+          ItemCreated: "itemCreatedLbl",
+          CheckValue: "checkValueLbl",
+          ChangeValue: "changeValueLbl",
+          SendAnEmail: "sendAnEmailLbl",
+          Else: "elseLbl",
+          TypeSubject: "typeSubjectLbl",
+          TypeEmail: "typeEmailLbl",
+          SelectColumnTooltip: "selectColumnTooltip",
+          SetLbl: "setLbl",
+        };
+
+        localeMap[LocalizedStringKeys.WhenThisHappens] = "When This Happens";
+        localeMap[LocalizedStringKeys.DoThis] = "Do This";
+        localeMap[LocalizedStringKeys.ColumnChanges] = "Column Changes";
+        localeMap[LocalizedStringKeys.OnInterval] = "On Interval";
+        localeMap[LocalizedStringKeys.OnAddItem] = "On Add Item";
+        localeMap[LocalizedStringKeys.ItemCreated] = "Item Created";
+        localeMap[LocalizedStringKeys.CheckValue] = "Check Value";
+        localeMap[LocalizedStringKeys.ChangeValue] = "Change Value";
+        localeMap[LocalizedStringKeys.SendAnEmail] = "Send An Email";
+        localeMap[LocalizedStringKeys.Else] = "else";
+        localeMap[LocalizedStringKeys.TypeSubject] = "Type Subject";
+        localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
+        localeMap[LocalizedStringKeys.SelectColumnTooltip] =
+          "Select Column Tooltip";
+       element.localizedStringMap = localeMap;
+      console.log(element.localizedStringMap)
+
 
         function valueChanges(event) {
           let selectedCol;
-          
+
           switch (event.field) {
-            case "ValueInput":
-            
-              if (event.item.getIdentifier() === "OnIntervalEvent") {
+            case window.ValueInput.identifier:
+              if (event.item.getIdentifier() === window.OnIntervalEvent.identifier) {
                 event.item.state.change("intervalList", TIMESCALE);
                 return;
               }
               break;
-            case "IntervalInput":
+            case window.IntervalInput.identifier:
               const timescale = TIMESCALE.find(
                 (time) => time.value === event.value
               )?.timescale;
               event.item.state.change("timescale", timescale);
               break;
-              case 'TriggerColumnInput':
+            case window.TriggerColumnInput.identifier:
 
-            case "ColumnInput":
+            case window.ColumnInput.identifier:
               selectedCol = NORMALIZED_COLUMN.find(
                 (col) => col.value === event.value
               );
@@ -221,8 +283,8 @@
               if (selectedCol) {
                 event.item.state.change("conditions", condition);
               }
-            case "ConditionInput":
-            case "ToColumnInput":
+            case window.ConditionInput.identifier:
+            case window.ToColumnInput.identifier:
               selectedCol = NORMALIZED_COLUMN.find(
                 (col) => col.value === event.value
               );
@@ -240,264 +302,9 @@
               }
 
               break;
-            case "EmailDataInput":
-              const notify = [
-                {
-                  text: WORKFLOW_CONST.notifyMeLBl,
-                  value: NotificationRecipientTypesEnum.NotifyMe,
-                },
-                {
-                  text: WORKFLOW_CONST.notifyEveryoneOnTheProjectLbl,
-                  value: NotificationRecipientTypesEnum.NotifyEveryoneOnProject,
-                },
-                {
-                  text: WORKFLOW_CONST.notifyProjectOwnersLbl,
-                  value: NotificationRecipientTypesEnum.NotifyProjectOwners,
-                },
-                {
-                  text: WORKFLOW_CONST.notifySpecificPeopleLbl,
-                  value: NotificationRecipientTypesEnum.NotifySpecificPeople,
-                },
-                {
-                  text: WORKFLOW_CONST.notifySpecificColumn,
-                  value: NotificationRecipientTypesEnum.NotifySpecificColumn,
-                },
-              ];
-              event.item.state.change("emailToInputType", InputTypes.List);
-              event.item.state.change("emailToValues", notify);
-              if (event.value) {
-                event.item.state.change("subject", event.value.subject);
-                event.item.state.change("body", event.value.body);
-              }
-              break;
-            case "EmailToInput": {
-              // performSelectNotifRecipient(event);
-              event.item.state.change("recipientType", event.value);
-              break;
-            }
-            case "EmailRecepientInput":
-              if (
-                event.item.state.get("emailTo") !==
-                NotificationRecipientTypesEnum.NotifySpecificColumn
-              ) {
-                event.item.state.change("recipients", event.value?.ids);
-              } else {
-                event.item.state.change("peopleColumnId", event.value);
-              }
-              break;
+            case window.EmailDataInput.identifier:
+            
           }
-        }
-
-        function prepareGatewayTypeCollection(event) {
-          if (gatewayType.get("equal").includes(selectedColumnType)) {
-            gatewayTypeCol.push({
-              text: "Equal",
-              value: "equal",
-            });
-
-            gatewayTypeCol.push({
-              text: "Not Equal",
-              value: "notequal",
-            });
-          }
-
-          if (gatewayType.get("greaterThan").includes(selectedColumnType)) {
-            gatewayTypeCol.push({
-              text: "Greater Than",
-              value: "greaterThan",
-            });
-
-            gatewayTypeCol.push({
-              text: "Less than",
-              value: "lessThan",
-            });
-          }
-
-          if (gatewayType.get("dueindays").includes(selectedColumnType)) {
-            gatewayTypeCol.push({
-              text: "Past Today",
-              value: "pasttoday",
-            });
-
-            gatewayTypeCol.push({
-              text: "Coming In {num} daya",
-              value: "comingin",
-            });
-
-            gatewayTypeCol.push({
-              text: "Past By",
-              value: "pastby",
-            });
-          }
-
-          if (gatewayType.get("like").includes(selectedColumnType)) {
-            gatewayTypeCol.push({
-              text: "like",
-              value: "like",
-            });
-          }
-        }
-        
-
-        function setColumnType(event, selectedCol) {
-          event.item.state.remove("valuePlaceholder");
-          if (event.field === "ToColumnInput") {
-            selectedCol = NORMALIZED_COLUMN.find(
-              (col) => col.value === event.value
-            );
-            selectedColumnType = selectedCol.text.toLowerCase();
-            gatewayTypeCol = [];
-          }
-          if (
-            ["comingin", "pastby"].includes(event.value) &&
-            ["date", "datetime"].includes(selectedColumnType)
-          ) {
-            event.item.state.change("valuePlaceholder", "n");
-            event.item.state.change("valueInputType", "number");
-            return;
-          }
-
-          switch (selectedColumnType) {
-            case "datetime":
-            case "date":
-              if (
-                event.item.name.toLowerCase() ===
-                localisedStrings.changeColumnValueLbl.toLowerCase()
-              ) {
-                event.item.state.change("valueInputType", selectedColumnType);
-                break;
-              }
-            // eslint-disable-next-line no-fallthrough
-            case "status":
-            case "priority":
-            case "dropdown":
-              setDropdownType(event, selectedCol);
-              break;
-            case "number":
-            case "percentage":
-           
-            case "text":
-              if (!event.item.trigger) {
-                event.item.state.change("valueTypes", VALUE_TYPES);
-              }
-              event.item.state.change("valueInputType", "text");
-              break;
-          }
-        }
-
-        function setDropdownType(event, selectedCol) {
-          if (!selectedCol) {
-            selectedCol = NORMALIZED_COLUMN.find(
-              (col) => col.value === event.item.state.get("column")
-            );
-          }
-          prepareDropdownTypeColumnValueCollection(
-            selectedCol,
-            true,
-            event.item.trigger
-          );
-          event.item.state.change("valueInputType", "list");
-          event.item.state.change("values", [
-            { text: "hie", value: "hie tiny" },
-          ]);
-          if ("equal" || "notequal") {
-            event.item.state.change("conditionPrefix", "to");
-          }
-        }
-
-        function prepareDropdownTypeColumnValueCollection(
-          column,
-          addBlank = false,
-          addAnything = false
-        ) {
-          let possibleValues;
-          columnValueCol = [];
-          // if (column.columnType === ColumnTypesEnum.people) {
-          //   prepareBoardMemberCollection();
-          // } else
-          if (
-            column.text.toLowerCase() === "date" ||
-            column.text.toLowerCase() === "datetime"
-          ) {
-            columnValueCol.push(
-              ...[
-                {
-                  text: "todaylbl",
-                  value: "today",
-                },
-                {
-                  text: "pastDateLbl",
-                  value: "pasttoday",
-                },
-              ]
-            );
-          } else {
-            switch (column.columnType) {
-              case "status":
-                possibleValues = column?.metaData?.availableStatus;
-                break;
-              case "priority":
-                possibleValues = column?.metaData?.availablePriorities;
-                break;
-              case "dropdown":
-                possibleValues = column?.metaData?.options;
-                break;
-              default:
-                possibleValues = [];
-            }
-
-            possibleValues?.forEach((status) => {
-              const obj = {
-                text: `"${status.displayValue}"`,
-                value: status.value,
-                color: status.color,
-                iconClass: status.iconClass,
-                bgColor: status.bgColor,
-              };
-              columnValueCol.push(obj);
-            });
-
-            if (addBlank) {
-              addBlankOptionInDropdown(column);
-            }
-          }
-          if (addAnything) {
-            columnValueCol.unshift({
-              text: ANYTHING_DISPLAY_VALUE,
-              value: ANYTHING_VALUE,
-            });
-          }
-        }
-
-        function prepareGatewayTypeForAvailableConditions() {
-          gatewayType.set("equal", [
-            "status",
-            "dropdown",
-            "priority",
-            "number",
-            "percentage",
-            "currency",
-            "text",
-            "people",
-          ]);
-
-          gatewayType.set("greaterThan", ["number", "percentage", "currency"]);
-
-          gatewayType.set("dueindays", ["date", "datetime"]);
-
-          gatewayType.set("like", ["text"]);
-          gatewayType.set("changes", [
-            "status",
-            "dropdown",
-            "priority",
-            "number",
-            "percentage",
-            "currency",
-            "text",
-            "people",
-            "date",
-            "datetime",
-          ]);
         }
       });
     </script>
