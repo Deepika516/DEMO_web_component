@@ -255,6 +255,7 @@
 
 
         function valueChanges(event) {
+
           let selectedCol;
 
           switch (event.field) {
@@ -265,7 +266,9 @@
               }
               break;
             case window.IntervalInput.identifier:
+
               const timescale = TIMESCALE.find(
+                // brekets
                 (time) => time.value === event.value
               )?.timescale;
               event.item.state.change("timescale", timescale);
