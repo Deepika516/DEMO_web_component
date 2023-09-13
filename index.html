@@ -1,315 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Document</title>
-    <!-- <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
+
+<head>
+  <title>Document</title>
+  <!-- <script src="https://unpkg.com/@webcomponents/custom-elements"></script>
 <script src="https://unpkg.com/@webcomponents/shadydom"></script> -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="/assets/icons/icomoon/style.css"
-    />
-    <link rel="stylesheet" type="text/css" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/assets/icons/icomoon/style.css" />
+  <link rel="stylesheet" type="text/css" href="/styles.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-    <style>
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        /* margin-top: 150px;
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      /* margin-top: 150px;
         margin-left: 50px; */
-        font-family: Roboto, "Helvetica Neue", sans-serif;
-      }
-      .tree-group.no-node {
-        margin-bottom: 0 !important;
-      }
-      .tree-group .last-node {
-        height: auto !important;
-      }
-    </style>
-  </head>
-  <body>
-    <sourceloop-workflow-element></sourceloop-workflow-element>
-    <div class="diagramRender">
-      <p id="diagram">
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
 
-      </p>
-    </div>
+    .tree-group.no-node {
+      margin-bottom: 0 !important;
+    }
 
-    <script type="text/javascript" src="workflows-element.js"></script>
+    .tree-group .last-node {
+      height: auto !important;
+    }
+  </style>
+</head>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const element = document.querySelector("sourceloop-workflow-element");
+<body>
+  <!-- some input of xml -->
+  <!-- us input se workflow element render ho -->
+  <!--  -->
+  <sourceloop-workflow-element></sourceloop-workflow-element>
+  <button id="editButton">Edit</button>
+  <div class="diagramRender">
+    <p id="diagram"></p>
+  </div>
+  <input type="date" id="date">
+  <script>
+    window.workflowEnv = { envIdentifier: "heloo" };
+  </script>
+  <script type="text/javascript" src="workflows-element.js"></script>
+  <script>
 
-        const NORMALIZED_COLUMN = [
-          {
-            text: "Status",
-            value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
-          },
-          {
-            text: "Priority",
-            value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
-          },
-          {
-            text: "Text",
-            value: "2069d144-db46-0737-2c9d-bc339949d684",
-          },
-          {
-            text: "Number",
-            value: "47beeecd-712c-6f8b-c595-92c3712780cb",
-          },
-        ];
+    const NORMALIZED_COLUMN = [
+      {
+        text: "Status",
+        value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
+      },
+      {
+        text: "Priority",
+        value: "1952177d-9a3e-6ef4-ae8f-522c08153026",
+      },
+      {
+        text: "Text",
+        value: "2069d144-db46-0737-2c9d-bc339949d684",
+      },
+      {
+        text: "Number",
+        value: "47beeecd-712c-6f8b-c595-92c3712780cb",
+      },
+      {
+        text: "Date",
+        value: "4a50725d-5d6c-485c-9a49-af4443744918",
+      },
+    ];
 
-        const TIMESCALE = [
-          { text: "Days", value: "D", timescale: "" },
-          { text: "Hours", value: "H", timescale: "T" },
-          { text: "Seconds", value: "S", timescale: "T" },
-        ];
+    const TIMESCALE = [
+      { text: "Days", value: "D", timescale: "" },
+      { text: "Hours", value: "H", timescale: "T" },
+      { text: "Seconds", value: "S", timescale: "T" },
+    ];
 
-        const VALUE_TYPES = [
-          {
-            text: "ANYTHING",
-            value: "anyValue",
-          },
-          {
-            text: "CUSTOM_VALUE",
-            value: "customValue",
-          },
-        ];
+    const VALUE_TYPES = [
+      {
+        text: "ANYTHING",
+        value: "anyValue",
+      },
+      {
+        text: "CUSTOM_VALUE",
+        value: "customValue",
+      },
+    ];
 
-        const FIELD_VALUES = {
-          status: {
-            valueInputType: "list",
-            values: [
-              { text: "Todo", value: "todo" },
-              { text: "In Progress", value: "in_progress" },
-            ],
-          },
-          priority: {
-            valueInputType: "list",
-            values: [
-              { text: "Critical", value: "critical" },
-              { text: "High", value: "high" },
-              { text: "Medium", value: "medium" },
-              { text: "Low", value: "low" },
-            ],
-          },
-          date: {
-            valueInputType: "date",
-          },
-          datetime: {
-            valueInputType: "datetime",
-          },
-          people: {
-            valueInputType: "people",
-          },
-          text: {
-            valueInputType: "text",
-          },
-          number: {
-            valueInputType: "number",
-          },
-        };
+    const FIELD_VALUES = {
+      status: {
+        valueInputType: "list",
+        values: [
+          { text: "Todo", value: "todo" },
+          { text: "In Progress", value: "in_progress" },
+        ],
+      },
+      priority: {
+        valueInputType: "list",
+        values: [
+          { text: "Critical", value: "critical" },
+          { text: "High", value: "high" },
+          { text: "Medium", value: "medium" },
+          { text: "Low", value: "low" },
+        ],
+      },
+      date: {
+        valueInputType: "date",
+      },
+      datetime: {
+        valueInputType: "datetime",
+      },
+      people: {
+        valueInputType: "people",
+      },
+      text: {
+        valueInputType: "text",
+      },
+      number: {
+        valueInputType: "number",
+      },
+    };
 
-        const DEFAULT_CONDITION = [
-          { text: "Equal", value: "equal" },
-          { text: "Not Equal", value: "notequal" },
-         
-        ];
-        const DATE_CONDITIONS = [
-          { text: "Past Today", value: "pastToday" },
-          { text: "Coming In", value: "comingIn" },
-          { text: "Past by", value: "pastby" },
-         
-        ];
-        const CONDITIONS = {
-          date: DATE_CONDITIONS,
-          datetime: DATE_CONDITIONS,
-        };
-
-        let selectedCol;
-        let selectedColumnType;
-        const gatewayType = new Map();
-       // prepareGatewayTypeForAvailableConditions();
-        let gatewayTypeCol = [];
-        let diagram = "";
-
-        element.addEventListener("diagramChange", (event) => {
-          diagram = event.detail;
-          const element=document.getElementById("diagram");
-          if(diagram){
-            element.innerText=diagram;
-          }
-        });
-        element.addEventListener("eventAdded", (event) => {
-          elementClick(event.detail);
-        });
-        element.addEventListener("actionAdded", (event) => {
-          elementClick(event.detail);
-        });
-        element.addEventListener("itemChanged", (event) => {
-          valueChanges(event.detail);
-        });
-
-        function elementClick(event) {
-          const selectedElement = event.event ?? event.action;
-          switch (selectedElement.getIdentifier()) {
-            case window.OnIntervalEvent.identifier:
-              selectedElement.state.change("intervalList", TIMESCALE);
-              selectedElement.state.change("valuePlaceholder", "n");
-            case window.OnChangeEvent.identifier:
-            case window.OnValueEvent.identifier:
-             let columns = NORMALIZED_COLUMN.filter(
-                (col) => col.text.toLowerCase() !== 'priority'
-              );
-              selectedElement.state.change("columns", columns);
-              break;
-            case window.ChangeColumnValueAction.identifier:
-              selectedElement.state.change("columns", NORMALIZED_COLUMN);
-              break;
-          }
-        }
-    element.state={
-    columns: NORMALIZED_COLUMN,
-    conditions: [],
-    values: [],
-  };
-
-  element.allColumns = [
-    {
-      text: 'Status',
-      value: '{{Status}}',
-    },
-    {
-      text: 'People',
-      value: '{{People}}',
-    },
-    {
-      text: 'Text',
-      value: '{{Text}}',
-    },
-    {
-      text: 'Number',
-      value: '{{Number}}',
-    },
-    {
-      text: 'Date/Time',
-      value: '{{Date/Time}}',
-    },
-    {
-      text: 'Date',
-      value: '{{Date}}',
-    },
-    {
-      text: 'Assignee',
-      value: '{{Assignee}}',
-    },
-  ];
-
-  let localeMap = {};
-        const LocalizedStringKeys = {
-          WhenThisHappens: "whenThisHappensLbl",
-          DoThis: "doThisLbl",
-          ColumnChanges: "columnChangesLbl",
-          ChangesTo: "triggerColumnSuffix",
-          OnInterval: "onIntervalLbl",
-          OnAddItem: "onAddItemLbl",
-          ItemCreated: "itemCreatedLbl",
-          CheckValue: "checkValueLbl",
-          ChangeValue: "changeValueLbl",
-          SendAnEmail: "sendAnEmailLbl",
-          Else: "elseLbl",
-          TypeSubject: "typeSubjectLbl",
-          TypeEmail: "typeEmailLbl",
-          SelectColumnTooltip: "selectColumnTooltip",
-          SetLbl: "setLbl",
-        };
-
-        localeMap[LocalizedStringKeys.WhenThisHappens] = "When This Happens";
-        localeMap[LocalizedStringKeys.DoThis] = "Do This";
-        localeMap[LocalizedStringKeys.ColumnChanges] = "Column Changes";
-        localeMap[LocalizedStringKeys.OnInterval] = "On Interval";
-        localeMap[LocalizedStringKeys.OnAddItem] = "On Add Item";
-        localeMap[LocalizedStringKeys.ItemCreated] = "Item Created";
-        localeMap[LocalizedStringKeys.CheckValue] = "Check Value";
-        localeMap[LocalizedStringKeys.ChangeValue] = "Change Value";
-        localeMap[LocalizedStringKeys.SendAnEmail] = "Send An Email";
-        localeMap[LocalizedStringKeys.Else] = "else";
-        localeMap[LocalizedStringKeys.TypeSubject] = "Type Subject";
-        localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
-        localeMap[LocalizedStringKeys.SelectColumnTooltip] =
-          "Select Column Tooltip";
-       element.localizedStringMap = localeMap;
-      console.log(element.localizedStringMap)
+    const DEFAULT_CONDITION = [
+      { text: "Equal", value: "equal" },
+      { text: "Not Equal", value: "notequal" },
+    ];
+    const DATE_CONDITIONS = [
+      { text: "Past Today", value: "pastToday" },
+      { text: "Coming In", value: "comingIn" },
+      { text: "Past by", value: "pastby" },
+    ];
+    const CONDITIONS = {
+      date: DATE_CONDITIONS,
+      datetime: DATE_CONDITIONS,
+    };
+    const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:modeler=\"http://camunda.org/schema/modeler/1.0\" id=\"Definitions_1aj5pzu\" targetNamespace=\"http://bpmn.io/schema/bpmn\" exporter=\"Camunda Modeler\" exporterVersion=\"4.12.0\" modeler:executionPlatform=\"Camunda Platform\" modeler:executionPlatformVersion=\"7.15.0\"><bpmn:process id=\"ProcessElement_52660\" name=\"Oasis_hwQkX4LULyxH1ovRNiGCUVAVAB812\" isExecutable=\"true\"><bpmn:extensionElements><camunda:properties><camunda:property name=\"14017_columnName\" value=\"Numbers\" /><camunda:property name=\"14017_column\" value=\"a03941f3-2c15-61eb-8e49-a562938c3da4\" /><camunda:property name=\"14017_valueName\" /><camunda:property name=\"14017_value\" value=\"10\" /><camunda:property name=\"99539_columnName\" value=\"Status\" /><camunda:property name=\"99539_column\" value=\"22c3a9a3-3f7c-be9f-cd45-64e8291d6e14\" /><camunda:property name=\"99539_conditionName\" value=\"Equal\" /><camunda:property name=\"99539_condition\" value=\"equal\" /><camunda:property name=\"99539_valueName\" value=\"To Do\" /><camunda:property name=\"99539_value\" value=\"todo\" /></camunda:properties></bpmn:extensionElements><bpmn:startEvent id=\"StartElement_78426\" name=\"start\"><bpmn:outgoing>Flow_13302</bpmn:outgoing></bpmn:startEvent><bpmn:serviceTask id=\"TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079\" name=\"trigger when column value changes\" camunda:type=\"external\" camunda:topic=\"trigger-on-tcv-change-dev\"><bpmn:extensionElements><camunda:inputOutput><camunda:inputParameter name=\"pathParams\"><camunda:script scriptFormat=\"Javascript\">\n\nvar json = S(\"{}\");\n\njson.prop(\"groupColumnId\", \"22c3a9a3-3f7c-be9f-cd45-64e8291d6e14\");\njson</camunda:script></camunda:inputParameter><camunda:inputParameter name=\"outputVariable\">TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079</camunda:inputParameter></camunda:inputOutput></bpmn:extensionElements><bpmn:incoming>Flow_13302</bpmn:incoming><bpmn:outgoing>Flow_3635</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id=\"Flow_13302\" sourceRef=\"StartElement_78426\" targetRef=\"TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079\" /><bpmn:serviceTask id=\"ReadColumnValue_OnChangeEvent_99539_AndGroup_58079\" name=\"read column value\" camunda:type=\"external\" camunda:topic=\"read-task-column-value-dev\"><bpmn:extensionElements><camunda:inputOutput><camunda:inputParameter name=\"pathParams\"><camunda:script scriptFormat=\"Javascript\">var readObj = JSON.parse(execution.getVariable('TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079'))\nvar taskIdsLocal = readObj.taskIds;\nvar json = S(\"{}\");\n\njson.prop(\"taskIds\", taskIdsLocal);\njson.prop(\"groupColumnId\", \"22c3a9a3-3f7c-be9f-cd45-64e8291d6e14\");\njson</camunda:script></camunda:inputParameter><camunda:inputParameter name=\"outputVariable\">ReadColumnValue_OnChangeEvent_99539_AndGroup_58079</camunda:inputParameter></camunda:inputOutput></bpmn:extensionElements><bpmn:incoming>Flow_3635</bpmn:incoming><bpmn:outgoing>Flow_25808</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id=\"Flow_3635\" sourceRef=\"TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079\" targetRef=\"ReadColumnValue_OnChangeEvent_99539_AndGroup_58079\" /><bpmn:inclusiveGateway id=\"GatewayElement_OnChangeEvent_99539_AndGroup_58079\" name=\"[object Object]\"><bpmn:incoming>Flow_25808</bpmn:incoming><bpmn:outgoing>Flow_32313</bpmn:outgoing></bpmn:inclusiveGateway><bpmn:sequenceFlow id=\"Flow_25808\" sourceRef=\"ReadColumnValue_OnChangeEvent_99539_AndGroup_58079\" targetRef=\"GatewayElement_OnChangeEvent_99539_AndGroup_58079\" /><bpmn:serviceTask id=\"ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999\" name=\"change column value\" camunda:type=\"external\" camunda:topic=\"change-task-column-value-dev\"><bpmn:extensionElements><camunda:inputOutput><camunda:inputParameter name=\"pathParams\"><camunda:script scriptFormat=\"Javascript\">var readObj = JSON.parse(execution.getVariable('Flow_32313'))\nvar taskIdsLocal = readObj.taskIds;\nvar json = S(\"{}\");\n\njson.prop(\"taskIds\", taskIdsLocal);\njson.prop(\"groupColumnId\", \"a03941f3-2c15-61eb-8e49-a562938c3da4\");\njson.prop(\"changedValue\", '{\"displayValue\": \"10\", \"value\": \"10\"}');\njson</camunda:script></camunda:inputParameter><camunda:inputParameter name=\"outputVariable\">ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999</camunda:inputParameter></camunda:inputOutput></bpmn:extensionElements><bpmn:incoming>Flow_32313</bpmn:incoming><bpmn:outgoing>Flow_94730</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id=\"Flow_32313\" name=\"Status===&#39;todo&#39;\" sourceRef=\"GatewayElement_OnChangeEvent_99539_AndGroup_58079\" targetRef=\"ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999\"><bpmn:conditionExpression xsi:type=\"bpmn:tFormalExpression\" language=\"Javascript\">var readObj = JSON.parse(execution.getVariable('ReadColumnValue_OnChangeEvent_99539_AndGroup_58079'));\nvar ids = [];var json = S(\"{}\");\n\n      for(var key in readObj){\n          var taskValuePair = readObj[key];\n          if(taskValuePair &amp;&amp; taskValuePair.value==='todo'){\n              ids.push(taskValuePair.id);\n            }\n        }\n      \n\n      json.prop(\"taskIds\", ids);\n      execution.setVariable('Flow_32313',json);\n      if(ids.length &gt; 0){true;}else {false;}\n      </bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:endEvent id=\"EndElement_74018\" name=\"end\"><bpmn:incoming>Flow_94730</bpmn:incoming></bpmn:endEvent><bpmn:sequenceFlow id=\"Flow_94730\" sourceRef=\"ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999\" targetRef=\"EndElement_74018\" /></bpmn:process><bpmndi:BPMNDiagram id=\"BPMNDiagram_1\"><bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"ProcessElement_52660\"><bpmndi:BPMNShape id=\"_BPMNShape_StartElement_78426\" bpmnElement=\"StartElement_78426\"><dc:Bounds x=\"100\" y=\"100\" width=\"36\" height=\"36\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"_BPMNShape_TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079\" bpmnElement=\"TriggerWhenColumnChanges_OnChangeEvent_99539_AndGroup_58079\"><dc:Bounds x=\"236\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"_BPMNConnection_Flow_13302\" bpmnElement=\"Flow_13302\"><di:waypoint x=\"136\" y=\"118\" /><di:waypoint x=\"236\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id=\"_BPMNShape_ReadColumnValue_OnChangeEvent_99539_AndGroup_58079\" bpmnElement=\"ReadColumnValue_OnChangeEvent_99539_AndGroup_58079\"><dc:Bounds x=\"436\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"_BPMNConnection_Flow_3635\" bpmnElement=\"Flow_3635\"><di:waypoint x=\"336\" y=\"118\" /><di:waypoint x=\"436\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id=\"_BPMNShape_GatewayElement_OnChangeEvent_99539_AndGroup_58079\" bpmnElement=\"GatewayElement_OnChangeEvent_99539_AndGroup_58079\"><dc:Bounds x=\"636\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"_BPMNConnection_Flow_25808\" bpmnElement=\"Flow_25808\"><di:waypoint x=\"536\" y=\"118\" /><di:waypoint x=\"636\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id=\"_BPMNShape_ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999\" bpmnElement=\"ChangeColumnValue_ChangeColumnValueAction_14017_AndGroup_4999\"><dc:Bounds x=\"836\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"_BPMNConnection_Flow_32313\" bpmnElement=\"Flow_32313\"><di:waypoint x=\"736\" y=\"118\" /><di:waypoint x=\"836\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id=\"_BPMNShape_EndElement_74018\" bpmnElement=\"EndElement_74018\"><dc:Bounds x=\"1036\" y=\"100\" width=\"36\" height=\"36\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"_BPMNConnection_Flow_94730\" bpmnElement=\"Flow_94730\"><di:waypoint x=\"936\" y=\"118\" /><di:waypoint x=\"1036\" y=\"118\" /></bpmndi:BPMNEdge></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>`
+    // element.setAttribute("diagram",`${xml}`)
+    document.addEventListener("DOMContentLoaded", ()=>onLoad(""))
+    editButton.addEventListener("click", ()=>onLoad(xml));
+    function onLoad(diagram2) {
+      const element = document.querySelector("sourceloop-workflow-element");
+      element.setAttribute("diagram", `${diagram2}`)
+      const editButton = document.getElementById("editButton");
 
 
-        function valueChanges(event) {
 
-          let selectedCol;
+      // element.setAttribute("diagram", `${xml}`)
+      let selectedCol;
+      let selectedColumnType;
+      const gatewayType = new Map();
+      // prepareGatewayTypeForAvailableConditions();
+      let gatewayTypeCol = [];
+      let diagram = "";
 
-          switch (event.field) {
-            case window.ValueInput.identifier:
-              if (event.item.getIdentifier() === window.OnIntervalEvent.identifier) {
-                event.item.state.change("intervalList", TIMESCALE);
-                return;
-              }
-              break;
-            case window.IntervalInput.identifier:
-
-              const timescale = TIMESCALE.find(
-                // brekets
-                (time) => time.value === event.value
-              )?.timescale;
-              event.item.state.change("timescale", timescale);
-              break;
-            case window.TriggerColumnInput.identifier:
-
-            case window.ColumnInput.identifier:
-              selectedCol = NORMALIZED_COLUMN.find(
-                (col) => col.value === event.value
-              );
-              selectedColumnType = selectedCol.text?.toLowerCase();
-              const condition =
-                CONDITIONS[selectedCol.text?.toLowerCase()] ||
-                DEFAULT_CONDITION;
-              if (selectedCol) {
-                event.item.state.change("conditions", condition);
-              }
-            case window.ConditionInput.identifier:
-            case window.ToColumnInput.identifier:
-              selectedCol = NORMALIZED_COLUMN.find(
-                (col) => col.value === event.value
-              );
-              if (selectedCol)
-                selectedColumnType = selectedCol.text?.toLowerCase();
-              event.item.state.change(
-                "valueInputType",
-                FIELD_VALUES[selectedColumnType].valueInputType
-              );
-              if (FIELD_VALUES[selectedColumnType].values) {
-                event.item.state.change(
-                  "values",
-                  FIELD_VALUES[selectedColumnType].values
-                );
-              }
-
-              break;
-            case window.EmailDataInput.identifier:
-            
-          }
+      element.addEventListener("diagramChange", (event) => {
+        diagram = event.detail;
+        const element = document.getElementById("diagram");
+        if (diagram) {
+          element.innerText = diagram;
         }
       });
-    </script>
-  </body>
+      element.addEventListener("eventAdded", (event) => {
+        elementClick(event.detail);
+      });
+      element.addEventListener("actionAdded", (event) => {
+        elementClick(event.detail);
+      });
+      element.addEventListener("itemChanged", (event) => {
+        valueChanges(event.detail);
+      });
+
+      function elementClick(event) {
+        
+        const selectedElement = event.event ?? event.action;
+        switch (selectedElement.getIdentifier()) {
+          case window.OnIntervalEvent.identifier:
+            selectedElement.state.change("intervalList", TIMESCALE);
+            selectedElement.state.change("valuePlaceholder", "n");
+          case window.OnChangeEvent.identifier:
+          case window.OnValueEvent.identifier:
+            let columns = NORMALIZED_COLUMN.filter(
+              (col) => col.text.toLowerCase() !== "priority"
+            );
+            selectedElement.state.change("columns", columns);
+            break;
+          case window.ChangeColumnValueAction.identifier:
+            selectedElement.state.change("columns", NORMALIZED_COLUMN);
+            break;
+        }
+      }
+      element.state = {
+        columns: NORMALIZED_COLUMN,
+        conditions: [],
+        values: [],
+      };
+
+      element.allColumns = [
+        {
+          text: "Status",
+          value: "{{Status}}",
+        },
+        {
+          text: "People",
+          value: "{{People}}",
+        },
+        {
+          text: "Text",
+          value: "{{Text}}",
+        },
+        {
+          text: "Number",
+          value: "{{Number}}",
+        },
+        {
+          text: "Date/Time",
+          value: "{{Date/Time}}",
+        },
+        {
+          text: "Date",
+          value: "{{Date}}",
+        },
+        {
+          text: "Assignee",
+          value: "{{Assignee}}",
+        },
+      ];
+
+      let localeMap = {};
+      const LocalizedStringKeys = {
+        WhenThisHappens: "whenThisHappensLbl",
+        DoThis: "doThisLbl",
+        ColumnChanges: "columnChangesLbl",
+        ChangesTo: "triggerColumnSuffix",
+        OnInterval: "onIntervalLbl",
+        OnAddItem: "onAddItemLbl",
+        ItemCreated: "itemCreatedLbl",
+        CheckValue: "checkValueLbl",
+        ChangeValue: "changeValueLbl",
+        SendAnEmail: "sendAnEmailLbl",
+        Else: "elseLbl",
+        TypeSubject: "typeSubjectLbl",
+        TypeEmail: "typeEmailLbl",
+        SelectColumnTooltip: "selectColumnTooltip",
+        SetLbl: "setLbl",
+      };
+
+      localeMap[LocalizedStringKeys.WhenThisHappens] = "When This Happens";
+      localeMap[LocalizedStringKeys.DoThis] = "Do This";
+      localeMap[LocalizedStringKeys.ColumnChanges] = "Column Changes";
+      localeMap[LocalizedStringKeys.OnInterval] = "On Interval";
+      localeMap[LocalizedStringKeys.OnAddItem] = "On Add Item";
+      localeMap[LocalizedStringKeys.ItemCreated] = "Item Created";
+      localeMap[LocalizedStringKeys.CheckValue] = "Check Value";
+      localeMap[LocalizedStringKeys.ChangeValue] = "Change Value";
+      localeMap[LocalizedStringKeys.SendAnEmail] = "Send An Email";
+      localeMap[LocalizedStringKeys.Else] = "else";
+      localeMap[LocalizedStringKeys.TypeSubject] = "Type Subject";
+      localeMap[LocalizedStringKeys.TypeEmail] = "Type Email";
+      localeMap[LocalizedStringKeys.SelectColumnTooltip] =
+        "Select Column Tooltip";
+      element.localizedStringMap = localeMap;
+      console.log(element.localizedStringMap);
+
+      function valueChanges(event) {
+
+        let selectedCol;
+
+        switch (event.field) {
+          case window.ValueInput.identifier:
+            if (
+              event.item.getIdentifier() === window.OnIntervalEvent.identifier
+            ) {
+              event.item.state.change("intervalList", TIMESCALE);
+              return;
+            }
+            break;
+          case window.IntervalInput.identifier:
+            const timescale = TIMESCALE.find(
+              // brekets
+              (time) => time.value === event.value
+            )?.timescale;
+            event.item.state.change("timescale", timescale);
+            break;
+          case window.TriggerColumnInput.identifier:
+
+          case window.ColumnInput.identifier:
+            selectedCol = NORMALIZED_COLUMN.find(
+              (col) => col.value === event.value
+            );
+            selectedColumnType = selectedCol.text?.toLowerCase();
+            const condition =
+              CONDITIONS[selectedCol.text?.toLowerCase()] ||
+              DEFAULT_CONDITION;
+            if (selectedCol) {
+              event.item.state.change("conditions", condition);
+            }
+            event.item.state.change("valueInputType", FIELD_VALUES[selectedColumnType].valueInputType);
+            event.item.state.change("valueTypes", VALUE_TYPES)
+
+            // event.item.state.change("values", [
+            //   {
+            //     text: "today",
+            //     value: "today",
+            //   },
+            //   {
+            //     text: "PastToday",
+            //     value: "PastToday",
+            //   },
+            // ]);
+            break;
+          case window.ConditionInput.identifier:
+          case window.ToColumnInput.identifier:
+            selectedCol = NORMALIZED_COLUMN.find(
+              (col) => col.value === event.value
+            );
+            if (selectedCol)
+              selectedColumnType = selectedCol.text?.toLowerCase();
+            event.item.state.change(
+              "valueInputType",
+              FIELD_VALUES[selectedColumnType].valueInputType
+            );
+            if (FIELD_VALUES[selectedColumnType].values) {
+              event.item.state.change(
+                "values",
+                FIELD_VALUES[selectedColumnType].values
+              );
+            }
+
+            break;
+
+          case window.EmailDataInput.identifier:
+
+        }
+      }
+
+    };
+</script>
+
+
+</body>
+
 </html>
